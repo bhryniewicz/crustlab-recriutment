@@ -1,4 +1,4 @@
-import { Currencies } from "./users";
+import { Currency } from "./users";
 
 export type TransactionType =
   | "Transfer"
@@ -11,9 +11,9 @@ export type Transaction = {
   amount: number;
   date: Date;
   receiver: string;
-  currency?: Currencies;
+  currency?: Currency;
   exchange_rate?: number;
   sender?: string;
-  currency_received?: Currencies;
-  currency_send?: Currencies;
+  currency_received?: Currency;
+  currency_send?: Currency;
 };
