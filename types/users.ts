@@ -4,6 +4,12 @@ export type Balance = {
   usd: number;
 };
 
+export type ExchangeRates = {
+  [key in keyof Balance]: {
+    [currency in Exclude<keyof Balance, key>]: number;
+  };
+};
+
 export type User = {
   id: string;
   name: string;
@@ -11,4 +17,4 @@ export type User = {
   balance: Balance;
 };
 
-export type Currencies = Extract<keyof Balance, string>;
+export type Currency = Extract<keyof Balance, string>;

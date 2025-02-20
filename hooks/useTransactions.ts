@@ -1,6 +1,6 @@
 import { mockUsers } from "@/data/users";
 import { Transaction } from "@/types/transactions";
-import { Currencies, User } from "@/types/users";
+import { Currency, User } from "@/types/users";
 import { getDataFromLocalStorage } from "@/utils/getDataFromLocalStorage";
 import { useEffect, useState } from "react";
 import { FEE, exchangeRates } from "@/utils/constants";
@@ -30,7 +30,7 @@ export const useTransactions = (id: string) => {
     firstUserId: string,
     secondUserId: string,
     amount: number,
-    currency: Currencies
+    currency: Currency
   ) => {
     const sender = users.find((user) => user.id === firstUserId)!;
     const receiver = users.find((user) => user.id === secondUserId)!;
@@ -39,11 +39,8 @@ export const useTransactions = (id: string) => {
       const senderFullname = `${sender.name} ${sender.surname}`;
       const receiverFullname = `${receiver.name} ${receiver.surname}`;
 
-      sender.balance[currency] =
-        sender.balance[currency] - amount - amount * FEE;
-      receiver.balance[currency] = Number(
-        receiver.balance[currency] + Number(amount)
-      );
+      sender.balance[currency] -= amount - amount * FEE;
+      receiver.balance[currency] += amount;
 
       localStorage.setItem("usersData", JSON.stringify(users));
 
@@ -67,7 +64,7 @@ export const useTransactions = (id: string) => {
   const widthdrawBalance = (
     userId: string,
     amount: number,
-    currency: Currencies
+    currency: Currency
   ) => {
     const receiver = users.find((user) => user.id === userId)!;
 
@@ -77,8 +74,7 @@ export const useTransactions = (id: string) => {
 
     const receiverFullname = `${receiver.name} ${receiver.surname}`;
 
-    receiver.balance[currency] =
-      Number(receiver.balance[currency]) - Number(amount) - amount * FEE;
+    receiver.balance[currency] -= amount - amount * FEE;
     localStorage.setItem("usersData", JSON.stringify(users));
 
     const transaction: Transaction = {
@@ -94,15 +90,13 @@ export const useTransactions = (id: string) => {
     return { success: true };
   };
 
-  const addBalance = (userId: string, amount: number, currency: Currencies) => {
+  const addBalance = (userId: string, amount: number, currency: Currency) => {
     const receiver = users.find((user) => user.id === userId);
 
     if (receiver) {
       const receiverFullname = `${receiver.name} ${receiver.surname}`;
 
-      receiver.balance[currency] = Number(
-        receiver.balance[currency] + Number(amount) - Number(amount * FEE)
-      );
+      receiver.balance[currency] += amount - amount * FEE;
       localStorage.setItem("usersData", JSON.stringify(users));
 
       const transaction: Transaction = {
@@ -122,8 +116,8 @@ export const useTransactions = (id: string) => {
 
   const exchangeCurrencies = (
     userId: string,
-    currencySend: Currencies,
-    currencyReceived: Currencies,
+    currencySend: Currency,
+    currencyReceived: Currency,
     amount: number
   ) => {
     const receiver = users.find((user) => user.id === userId);
@@ -132,13 +126,10 @@ export const useTransactions = (id: string) => {
       const receiverFullname = `${receiver.name} ${receiver.surname}`;
       const exchangeRate = exchangeRates[currencySend]?.[currencyReceived];
 
-      receiver.balance[currencySend] = Number(
-        receiver.balance[currencySend] - Number(amount) - amount * FEE
-      );
+      console.log(exchangeRate, "rate");
 
-      receiver.balance[currencyReceived] = Number(
-        receiver.balance[currencyReceived] + Number(amount) * exchangeRate
-      );
+      receiver.balance[currencySend] -= amount + amount * FEE;
+      receiver.balance[currencyReceived] += amount * exchangeRate;
 
       localStorage.setItem("usersData", JSON.stringify(users));
 
@@ -169,6 +160,6 @@ export const useTransactions = (id: string) => {
     addBalance,
     widthdrawBalance,
     exchangeCurrencies,
-    changeUsersBalance
+    changeUsersBalance,
   };
 };

@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormInput } from "../FormInput";
-import { ComboboxSelect } from "../ComboboxSelect/ComboboxSelect";
+import { ComboboxSelect } from "../ComboboxSelect";
 import { Button } from "../ui/button";
 import { Form } from "../ui/form";
 import { FormValues, GenericFormProps } from "./types";

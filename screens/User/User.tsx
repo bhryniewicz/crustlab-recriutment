@@ -39,7 +39,7 @@ export const User = () => {
   const fullName = `${name} ${surname}`;
 
   return (
-    <div>
+    <div className="max-h-screen">
       <div className="flex flex-col md:flex-row md:justify-between items-start">
         <div>
           <h1 className="text-7xl text-[#123dff] mb-2 md:mb-4">{fullName}</h1>

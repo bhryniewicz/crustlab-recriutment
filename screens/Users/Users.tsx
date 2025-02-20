@@ -2,7 +2,7 @@
 
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
-import { useUsers } from "@/hooks/useStorageUsers";
+import { useUsers } from "@/hooks/useUsers";
 import { UserCard } from "@/components/UserCard";
 import { useDebounce } from "use-debounce";
 

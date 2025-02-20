@@ -1,12 +1,5 @@
 import { ChangeUsersBalanceForm } from "@/components/ChangeUsersBalanceForm";
-import {
-  Dialog,
-  DialogContent,
-  DialogTrigger,
-  DialogTitle,
-  DialogDescription,
-  DialogHeader,
-} from "@/components/ui/dialog";
+
 import { Button } from "@/components/ui/button";
 import { AdjustBalanceForm } from "@/components/AdjustBalanceForm";
 import { ExchangeForm } from "../ExchangeForm";
@@ -16,6 +9,7 @@ import { ChangeUsersBalanceFormValues } from "../ChangeUsersBalanceForm/schema";
 import { AdjustBalanceFormValues } from "../AdjustBalanceForm/schema";
 import { ExchangeCurrenciesFormValues } from "../ExchangeForm/schema";
 import { BadgeEuro, BadgeMinus, BadgePlus, ForwardIcon } from "lucide-react";
+import { FormDialog } from "../FormDialog/FormDialog";
 
 interface ActionButtonsProps {
   onSubmitUpdateUserBalance: SubmitHandler<ChangeUsersBalanceFormValues>;
@@ -24,7 +18,8 @@ interface ActionButtonsProps {
   onSubmitExchange: SubmitHandler<ExchangeCurrenciesFormValues>;
   userId: string;
 }
-type CurrentForm = {
+
+export type CurrentForm = {
   form: ReactNode;
   title: string;
   subtitle: string;
@@ -111,16 +106,11 @@ export const ActionButtons: FC<ActionButtonsProps> = ({
           Exchange currencies
         </Button>
       </div>
-
-      <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
-        <DialogContent className="w-[400px] p-12">
-          <DialogHeader>
-            <DialogTitle>{currentForm?.title}</DialogTitle>
-            <DialogDescription>{currentForm?.subtitle}</DialogDescription>
-          </DialogHeader>
-          {currentForm?.form}
-        </DialogContent>
-      </Dialog>
+      <FormDialog
+        isFormOpen={isFormOpen}
+        setIsFormOpen={setIsFormOpen}
+        currentForm={currentForm}
+      />
     </>
   );
 };
