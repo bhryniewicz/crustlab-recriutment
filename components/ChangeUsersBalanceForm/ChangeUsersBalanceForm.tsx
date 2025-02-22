@@ -12,13 +12,15 @@ import { useTransactionContext } from "@/contexts/transactionsContext";
 interface ChangeUsersBalanceFormProps {
   onSubmit: SubmitHandler<ChangeUsersBalanceFormValues>;
   userId: string;
+  setIsFormOpen: (value: boolean) => void;
 }
 
 export const ChangeUsersBalanceForm: FC<ChangeUsersBalanceFormProps> = ({
   onSubmit,
   userId,
+  setIsFormOpen
 }) => {
-  const form = useForm<ChangeUsersBalanceFormValues>(FormSchema);
+  const form = useForm<ChangeUsersBalanceFormValues>(FormSchema, setIsFormOpen);
   const { error } = useTransactionContext();
 
   const {

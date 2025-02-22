@@ -12,7 +12,10 @@ type FormValues =
   | ExchangeCurrenciesFormValues
   | ChangeUsersBalanceFormValues;
 
-export const useFormData = <T extends FormValues>(formSchema: ZodSchema) => {
+export const useFormData = <T extends FormValues>(
+  formSchema: ZodSchema,
+  setIsFormOpen: (value: boolean) => void
+) => {
   const form = useForm<T>({
     mode: "onChange",
     resolver: zodResolver(formSchema),
@@ -25,6 +28,7 @@ export const useFormData = <T extends FormValues>(formSchema: ZodSchema) => {
   useEffect(() => {
     if (isSubmitSuccessful && !error) {
       reset();
+      setIsFormOpen(false);
     }
   }, [isSubmitSuccessful, error]);
 

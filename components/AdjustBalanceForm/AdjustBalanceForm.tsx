@@ -12,13 +12,15 @@ import { useTransactionContext } from "@/contexts/transactionsContext";
 interface AdjustBalanceFormProps {
   onSubmit: SubmitHandler<AdjustBalanceFormValues>;
   type: "add" | "withdraw";
+  setIsFormOpen: (value: boolean) => void;
 }
 
 export const AdjustBalanceForm: FC<AdjustBalanceFormProps> = ({
   onSubmit,
   type,
+  setIsFormOpen
 }) => {
-  const form = useForm<AdjustBalanceFormValues>(FormSchema);
+  const form = useForm<AdjustBalanceFormValues>(FormSchema,setIsFormOpen);
 
   const {
     handleSubmit,

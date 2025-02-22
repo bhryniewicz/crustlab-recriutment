@@ -4,10 +4,12 @@ import { useState } from "react";
 import { useUsers } from "@/hooks/useUsers";
 import { Input } from "@/components/ui/input";
 import { UserCard } from "@/components/UserCard";
+import { useDebounce } from "use-debounce";
 
 export const Users = () => {
   const [searchPhrase, setSearchPhrase] = useState<string>("");
-  const { users, isLoading } = useUsers(searchPhrase);
+  const [debouncedSearch] = useDebounce(searchPhrase, 500);
+  const { users, isLoading } = useUsers(debouncedSearch);
 
   return (
     <div className="flex flex-col gap-4 min-h-screen">

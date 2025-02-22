@@ -41,6 +41,7 @@ export const ActionButtons: FC<ActionButtonsProps> = ({ userId }) => {
                 <ChangeUsersBalanceForm
                   onSubmit={onSubmitChangeUsersBalance}
                   userId={userId}
+                  setIsFormOpen={setIsFormOpen}
                 />
               ),
             });
@@ -57,7 +58,11 @@ export const ActionButtons: FC<ActionButtonsProps> = ({ userId }) => {
               title: "Add balance to your account",
               subtitle: "Add balance to your another bank account",
               form: (
-                <AdjustBalanceForm onSubmit={onSubmitAddBalance} type="add" />
+                <AdjustBalanceForm
+                  onSubmit={onSubmitAddBalance}
+                  type="add"
+                  setIsFormOpen={setIsFormOpen}
+                />
               ),
             });
           }}
@@ -76,6 +81,7 @@ export const ActionButtons: FC<ActionButtonsProps> = ({ userId }) => {
                 <AdjustBalanceForm
                   onSubmit={onSubmitWidthdrawBalance}
                   type="withdraw"
+                  setIsFormOpen={setIsFormOpen}
                 />
               ),
             });
@@ -91,7 +97,12 @@ export const ActionButtons: FC<ActionButtonsProps> = ({ userId }) => {
             setCurrentForm({
               title: "Exchange currencies",
               subtitle: "Exchange your currencies with minimal fee",
-              form: <ExchangeCurrenciesForm onSubmit={onSubmitExchange} />,
+              form: (
+                <ExchangeCurrenciesForm
+                  onSubmit={onSubmitExchange}
+                  setIsFormOpen={setIsFormOpen}
+                />
+              ),
             });
           }}
         >

@@ -11,12 +11,14 @@ import { useTransactionContext } from "@/contexts/transactionsContext";
 
 interface ExchangeCurrenciesFormProps {
   onSubmit: SubmitHandler<ExchangeCurrenciesFormValues>;
+  setIsFormOpen: (value: boolean) => void;
 }
 
 export const ExchangeCurrenciesForm: FC<ExchangeCurrenciesFormProps> = ({
   onSubmit,
+  setIsFormOpen,
 }) => {
-  const form = useForm<ExchangeCurrenciesFormValues>(FormSchema);
+  const form = useForm<ExchangeCurrenciesFormValues>(FormSchema, setIsFormOpen);
 
   const {
     handleSubmit,
