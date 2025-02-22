@@ -6,10 +6,7 @@ import { Transactions } from "@/components/Transactions";
 import { ActionButtons } from "@/components/ActionButtons";
 import { UserProvider, useUserContext } from "@/contexts/userContext";
 import { ArrowLeft } from "lucide-react";
-import {
-  TransactionsProvider,
-  useTransactionContext,
-} from "@/contexts/transactionsContext";
+import { TransactionsProvider } from "@/contexts/transactionsContext";
 
 export const User = () => {
   const { id }: { id: string } = useParams();
@@ -17,13 +14,13 @@ export const User = () => {
   return (
     <TransactionsProvider id={id}>
       <UserProvider id={id}>
-        <DataComp id={id} />
+        <UserScreen id={id} />
       </UserProvider>
     </TransactionsProvider>
   );
 };
 
-const DataComp = ({ id }: { id: string }) => {
+const UserScreen = ({ id }: { id: string }) => {
   const { isLoading, user } = useUserContext();
   const router = useRouter();
 

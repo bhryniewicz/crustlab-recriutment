@@ -59,7 +59,7 @@ export const ComboboxSelect: FC<ComboboxSelectProps> = ({
             <PopoverContent className="w-[200px] p-0 overflow-y-auto">
               <Command>
                 <CommandList className="overflow-y-auto">
-                  <CommandGroup>
+                  <CommandGroup className="overflow-y-auto">
                     {list.map(({ label, value }) => (
                       <CommandItem
                         value={label}

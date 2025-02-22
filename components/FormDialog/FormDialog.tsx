@@ -5,9 +5,14 @@ import {
   DialogDescription,
   DialogHeader,
 } from "@/components/ui/dialog";
-import { CurrentForm } from "../ActionButtons";
-import { FC } from "react";
+import { FC, ReactNode } from "react";
 import { useTransactionContext } from "@/contexts/transactionsContext";
+
+type CurrentForm = {
+  title: string;
+  subtitle: string;
+  form: ReactNode;
+};
 
 interface FormDialogProps {
   isFormOpen: boolean;

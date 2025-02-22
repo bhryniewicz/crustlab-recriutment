@@ -13,7 +13,7 @@ describe("changeUsersBalance functionality", () => {
     const result = changeUsersBalance(senderId, receiverId, amount, currency);
 
     expect(result).toEqual({ success: true });
-    expect(users[0].balance.usd).toBe(100 - (amount + amount * FEE)); // Assuming 2% fee, adjust FEE value if necessary
+    expect(users[0].balance.usd).toBe(100 - (amount + amount * FEE));
     expect(users[1].balance.usd).toBe(50 + amount);
     expect(localStorage.setItem).toHaveBeenCalledWith(
       "usersData",
