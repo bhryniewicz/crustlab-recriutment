@@ -1,10 +1,13 @@
-import { FC } from "react";
 import { SubmitHandler } from "react-hook-form";
-import { ChangeUsersBalanceFormValues } from "./schema";
+import { ComboboxSelect } from "../ComboboxSelect/ComboboxSelect";
 import { currencies, mockUserSelection } from "@/data/users";
-import { FormSchema } from "./schema";
-import { GenericForm } from "../GenericForm";
-import { Field } from "../GenericForm/types";
+import { Form } from "../ui/form";
+import { FormInput } from "../FormInput";
+import { Button } from "../ui/button";
+import { FormSchema, ChangeUsersBalanceFormValues } from "./schema";
+import { FC } from "react";
+import { useFormData as useForm } from "@/hooks/useForm";
+import { useTransactionContext } from "@/contexts/transactionsContext";
 
 interface ChangeUsersBalanceFormProps {
   onSubmit: SubmitHandler<ChangeUsersBalanceFormValues>;
@@ -15,32 +18,35 @@ export const ChangeUsersBalanceForm: FC<ChangeUsersBalanceFormProps> = ({
   onSubmit,
   userId,
 }) => {
+  const form = useForm<ChangeUsersBalanceFormValues>(FormSchema);
+  const { error } = useTransactionContext();
+
+  const {
+    handleSubmit,
+    formState: { isSubmitting },
+  } = form;
+
   const usersWithoutSender = mockUserSelection.filter(
     (user) => user.value !== userId
   );
 
-  const fields: Field[] = [
-    { name: "amount", label: "Amount", type: "input" },
-    {
-      name: "currency",
-      label: "Currency",
-      type: "select",
-      options: currencies,
-    },
-    {
-      name: "person",
-      label: "Who gets the money?",
-      type: "select",
-      options: usersWithoutSender,
-    },
-  ];
+  const buttonText = isSubmitting ? "Sending" : "Send";
 
   return (
-    <GenericForm
-      onSubmit={onSubmit}
-      fields={fields}
-      schema={FormSchema}
-      buttonText="Send"
-    />
+    <Form {...form}>
+      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6">
+        {error && <h1 className="text-red-500 text-center text-sm">{error}</h1>}
+        <FormInput name="amount" label="Amount" defaultValue={""} />
+        <ComboboxSelect
+          name="person"
+          list={usersWithoutSender}
+          label="Who get money?"
+        />
+        <ComboboxSelect name="currency" list={currencies} label="currency" />
+        <Button type="submit" disabled={isSubmitting}>
+          {buttonText}
+        </Button>
+      </form>
+    </Form>
   );
 };

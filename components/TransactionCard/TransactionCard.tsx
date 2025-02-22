@@ -101,9 +101,21 @@ export const CardLayout = ({
           </p>
         </div>
       ) : (
-        <p className="font-bold">
-          {type === 'Add Balance' ? '+' : '-'} {amount} <span className="uppercase">{currency}</span>
-        </p>
+        <>
+          {(type === "Add Balance" || type === "Withdraw Balance") && (
+            <p className="font-bold">
+              {type === "Add Balance" ? "+" : "-"} {amount}{" "}
+              <span className="uppercase">{currency}</span>
+            </p>
+          )}
+
+          {type === "Transfer" && (
+            <p className="font-bold">
+              {amount < 0 ? `- ${-amount}` : `+ ${amount}`}{" "}
+              <span className="uppercase">{currency}</span>
+            </p>
+          )}
+        </>
       )}
     </Card>
   );

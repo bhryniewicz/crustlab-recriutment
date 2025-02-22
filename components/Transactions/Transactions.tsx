@@ -1,27 +1,22 @@
-import { Transaction } from "@/types/transactions";
 import { TransactionCard } from "../TransactionCard";
+import { useTransactionContext } from "@/contexts/transactionsContext";
 
-export const Transactions = ({
-  transactions,
-}: {
-  transactions: Transaction[] | null;
-}) => {
-  if (transactions === null || transactions.length === 0) {
-    return (
-      <p className="text-center text-gray-500">
-        No transactions for this account.
-      </p>
-    );
-  }
+export const Transactions = () => {
+  const { transactions } = useTransactionContext();
 
   return (
     <div>
       <h3 className="font-bold text-xl mb-4">Transactions</h3>
-      <div className="flex flex-col-reverse gap-4">
-        {transactions.map((trans, idx) => (
-          <TransactionCard transaction={trans} key={`${trans.type}-${idx}`} />
-        ))}
-      </div>
+
+      {transactions.length === 0 ? (
+        <p className="text-gray-500">No transactions for this account.</p>
+      ) : (
+        <div className="flex flex-col-reverse gap-4">
+          {transactions.map((trans, idx) => (
+            <TransactionCard transaction={trans} key={`${trans.type}-${idx}`} />
+          ))}
+        </div>
+      )}
     </div>
   );
 };

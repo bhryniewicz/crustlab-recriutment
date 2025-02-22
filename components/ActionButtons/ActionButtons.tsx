@@ -1,21 +1,13 @@
 import { ChangeUsersBalanceForm } from "@/components/ChangeUsersBalanceForm";
-
 import { Button } from "@/components/ui/button";
 import { AdjustBalanceForm } from "@/components/AdjustBalanceForm";
-import { ExchangeForm } from "../ExchangeForm";
+import { ExchangeCurrenciesForm } from "../ExchangeCurrenciesForm";
 import { FC, ReactNode, useState } from "react";
-import { SubmitHandler } from "react-hook-form";
-import { ChangeUsersBalanceFormValues } from "../ChangeUsersBalanceForm/schema";
-import { AdjustBalanceFormValues } from "../AdjustBalanceForm/schema";
-import { ExchangeCurrenciesFormValues } from "../ExchangeForm/schema";
 import { BadgeEuro, BadgeMinus, BadgePlus, ForwardIcon } from "lucide-react";
 import { FormDialog } from "../FormDialog/FormDialog";
+import { useSubmitters } from "@/hooks/useSubmitters";
 
 interface ActionButtonsProps {
-  onSubmitUpdateUserBalance: SubmitHandler<ChangeUsersBalanceFormValues>;
-  onSubmitAddBalance: SubmitHandler<AdjustBalanceFormValues>;
-  onSubmitWidthdrawBalance: SubmitHandler<AdjustBalanceFormValues>;
-  onSubmitExchange: SubmitHandler<ExchangeCurrenciesFormValues>;
   userId: string;
 }
 
@@ -25,15 +17,16 @@ export type CurrentForm = {
   subtitle: string;
 };
 
-export const ActionButtons: FC<ActionButtonsProps> = ({
-  onSubmitUpdateUserBalance,
-  onSubmitAddBalance,
-  onSubmitWidthdrawBalance,
-  onSubmitExchange,
-  userId,
-}) => {
+export const ActionButtons: FC<ActionButtonsProps> = ({ userId }) => {
   const [isFormOpen, setIsFormOpen] = useState<boolean>(false);
   const [currentForm, setCurrentForm] = useState<CurrentForm | null>(null);
+
+  const {
+    onSubmitAddBalance,
+    onSubmitChangeUsersBalance,
+    onSubmitExchange,
+    onSubmitWidthdrawBalance,
+  } = useSubmitters(userId);
 
   return (
     <>
@@ -46,7 +39,7 @@ export const ActionButtons: FC<ActionButtonsProps> = ({
               subtitle: "Send some money to other people who are on app",
               form: (
                 <ChangeUsersBalanceForm
-                  onSubmit={onSubmitUpdateUserBalance}
+                  onSubmit={onSubmitChangeUsersBalance}
                   userId={userId}
                 />
               ),
@@ -98,7 +91,7 @@ export const ActionButtons: FC<ActionButtonsProps> = ({
             setCurrentForm({
               title: "Exchange currencies",
               subtitle: "Exchange your currencies with minimal fee",
-              form: <ExchangeForm onSubmit={onSubmitExchange} />,
+              form: <ExchangeCurrenciesForm onSubmit={onSubmitExchange} />,
             });
           }}
         >

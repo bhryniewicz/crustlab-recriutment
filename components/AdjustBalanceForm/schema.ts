@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { currencySchema } from "../ExchangeForm/schema";
+import { currencySchema } from "../ExchangeCurrenciesForm/schema";
 
 export const FormSchema = z.object({
   amount: z.coerce.number().gt(0),

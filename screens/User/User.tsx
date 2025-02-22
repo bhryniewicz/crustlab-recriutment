@@ -1,67 +1,57 @@
 "use client";
 
-import { notFound, useParams } from "next/navigation";
-import { useUser } from "@/hooks/useUser";
-import { useTransactions } from "@/hooks/useTransactions";
+import { notFound, useParams, useRouter } from "next/navigation";
 import { UserBalance } from "@/components/UserBalance";
 import { Transactions } from "@/components/Transactions";
 import { ActionButtons } from "@/components/ActionButtons";
-import { useUpdated } from "@/hooks/useUpdated";
+import { UserProvider, useUserContext } from "@/contexts/userContext";
+import { ArrowLeft } from "lucide-react";
+import {
+  TransactionsProvider,
+  useTransactionContext,
+} from "@/contexts/transactionsContext";
 
 export const User = () => {
   const { id }: { id: string } = useParams();
-  const { user, isLoading } = useUser(id);
-  const { transactions } = useTransactions(id);
 
-  const {
-    updatedTransactions,
-    updatedUser,
-    onSubmitAddBalance,
-    onSubmitChangeUsersBalance,
-    onSubmitExchange,
-    onSubmitWidthdrawBalance,
-  } = useUpdated(id);
+  return (
+    <TransactionsProvider id={id}>
+      <UserProvider id={id}>
+        <DataComp id={id} />
+      </UserProvider>
+    </TransactionsProvider>
+  );
+};
 
-  if (isLoading)
-    return (
-      <div className="space-y-4">
-        <div className="w-72 h-8 bg-gray-300 animate-pulse rounded"></div>
-        <div className="w-40 h-6 bg-gray-200 animate-pulse rounded"></div>
-        <div className="w-96 h-6 bg-gray-300 animate-pulse rounded"></div>
-        <div className="w-full h-48 bg-gray-200 animate-pulse rounded"></div>
-      </div>
-    );
+const DataComp = ({ id }: { id: string }) => {
+  const { isLoading, user } = useUserContext();
+  const router = useRouter();
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
 
   if (!user) return notFound();
 
-  const { name, surname, balance } = updatedUser ?? user;
-
+  const { name, surname, balance } = user;
   const fullName = `${name} ${surname}`;
 
   return (
-    <div className="max-h-screen">
-      <div className="flex flex-col md:flex-row md:justify-between items-start">
-        <div>
-          <h1 className="text-7xl text-[#123dff] mb-2 md:mb-4">{fullName}</h1>
-          <p className="text-sm text-gray-500">{id}</p>
-        </div>
-        <ActionButtons
-          onSubmitUpdateUserBalance={onSubmitChangeUsersBalance}
-          onSubmitWidthdrawBalance={onSubmitWidthdrawBalance}
-          onSubmitAddBalance={onSubmitAddBalance}
-          onSubmitExchange={onSubmitExchange}
-          userId={id}
-        />
+    <div className="min-h-screen">
+      <div className="flex flex-col md:justify-between items-start gap-4">
+        <p
+          onClick={() => router.back()}
+          className="cursor-pointer flex items-center gap-2"
+        >
+          <ArrowLeft size={16} /> Back to users
+        </p>
+        <h1 className="text-7xl text-[#123dff]">{fullName}</h1>
+        <p className="text-sm text-gray-500">{id}</p>
+        <ActionButtons userId={id} />
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mt-12 md:mt-16">
+      <div className="grid grid-cols-1 gap-12 mt-12 md:mt-16">
         <UserBalance balance={balance} />
-        <Transactions
-          transactions={
-            updatedTransactions.length === 0
-              ? transactions
-              : updatedTransactions
-          }
-        />
+        <Transactions />
       </div>
     </div>
   );

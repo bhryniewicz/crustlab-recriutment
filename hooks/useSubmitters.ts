@@ -1,22 +1,19 @@
-import { useState } from "react";
-import { useTransactions } from "./useTransactions";
-import { User } from "@/types/users";
-import { Transaction } from "@/types/transactions";
 import { AdjustBalanceFormValues } from "@/components/AdjustBalanceForm/schema";
-import { ExchangeCurrenciesFormValues } from "@/components/ExchangeForm/schema";
+import { ExchangeCurrenciesFormValues } from "@/components/ExchangeCurrenciesForm/schema";
 import { ChangeUsersBalanceFormValues } from "@/components/ChangeUsersBalanceForm/schema";
+import { User } from "@/types/users";
+import { useUserContext } from "@/contexts/userContext";
+import { useTransactionContext } from "@/contexts/transactionsContext";
+import {
+  changeUsersBalance,
+  addBalance,
+  withdrawBalance,
+  exchangeCurrencies,
+} from "@/api/transactions";
 
-export const useUpdated = (id: string) => {
-  const [updatedUser, setUpdatedUser] = useState<User | null>(null);
-  const [updatedTransactions, setUpdatedTransactions] = useState<Transaction[]>(
-    []
-  );
-  const {
-    changeUsersBalance,
-    addBalance,
-    widthdrawBalance,
-    exchangeCurrencies,
-  } = useTransactions(id);
+export const useSubmitters = (id: string) => {
+  const { setUser } = useUserContext();
+  const { setError, setTransactions } = useTransactionContext();
 
   const handleBalanceOperation = <
     T extends { success: boolean; error?: string }
@@ -38,11 +35,12 @@ export const useUpdated = (id: string) => {
       const newTransactions = updatedTransactions[id];
 
       if (newUser) {
-        setUpdatedUser(newUser);
-        setUpdatedTransactions(newTransactions);
+        setUser(newUser);
+        setTransactions(newTransactions);
+        setError("");
       }
     } else {
-      console.log(result.error);
+      setError(result.error as string);
     }
   };
 
@@ -56,7 +54,7 @@ export const useUpdated = (id: string) => {
 
   const onSubmitWidthdrawBalance = (data: AdjustBalanceFormValues) =>
     handleBalanceOperation(() =>
-      widthdrawBalance(id, data.amount, data.currency)
+      withdrawBalance(id, data.amount, data.currency)
     );
 
   const onSubmitExchange = (data: ExchangeCurrenciesFormValues) =>
@@ -70,11 +68,9 @@ export const useUpdated = (id: string) => {
     );
 
   return {
-    updatedUser,
-    updatedTransactions,
-    onSubmitAddBalance,
     onSubmitChangeUsersBalance,
-    onSubmitExchange,
+    onSubmitAddBalance,
     onSubmitWidthdrawBalance,
+    onSubmitExchange,
   };
 };

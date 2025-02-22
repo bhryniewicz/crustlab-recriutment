@@ -1,9 +1,13 @@
-import { FC } from "react";
-import { FormSchema, AdjustBalanceFormValues } from "./schema";
-import { currencies } from "@/data/users";
-import { GenericForm } from "../GenericForm";
 import { SubmitHandler } from "react-hook-form";
-import { Field } from "../GenericForm/types";
+import { Form } from "../ui/form";
+import { FormInput } from "@/components/FormInput";
+import { Button } from "../ui/button";
+import { ComboboxSelect } from "../ComboboxSelect/ComboboxSelect";
+import { currencies } from "@/data/users";
+import { FormSchema, AdjustBalanceFormValues } from "./schema";
+import { FC } from "react";
+import { useFormData as useForm } from "@/hooks/useForm";
+import { useTransactionContext } from "@/contexts/transactionsContext";
 
 interface AdjustBalanceFormProps {
   onSubmit: SubmitHandler<AdjustBalanceFormValues>;
@@ -14,24 +18,32 @@ export const AdjustBalanceForm: FC<AdjustBalanceFormProps> = ({
   onSubmit,
   type,
 }) => {
-  const fields: Field[] = [
-    { name: "amount", label: "Amount", type: "input" },
-    {
-      name: "currency",
-      label: "Currency",
-      type: "select",
-      options: currencies,
-    },
-  ];
+  const form = useForm<AdjustBalanceFormValues>(FormSchema);
 
-  const buttonText = type === "withdraw" ? "Withdraw Balance" : "Add Balance";
+  const {
+    handleSubmit,
+    formState: { isSubmitting },
+  } = form;
+  const { error } = useTransactionContext();
+
+  const buttonText = isSubmitting
+    ? type === "withdraw"
+      ? "Withdrawing..."
+      : "Adding..."
+    : type === "withdraw"
+    ? "Withdraw Balance"
+    : "Add Balance";
 
   return (
-    <GenericForm
-      onSubmit={onSubmit}
-      fields={fields}
-      schema={FormSchema}
-      buttonText={buttonText}
-    />
+    <Form {...form}>
+      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6">
+        {error && <h1 className="text-red-500 text-center text-sm">{error}</h1>}
+        <FormInput name="amount" label="Amount" defaultValue={""} />
+        <ComboboxSelect name="currency" list={currencies} label="currency" />
+        <Button type="submit" disabled={isSubmitting}>
+          {buttonText}
+        </Button>
+      </form>
+    </Form>
   );
 };

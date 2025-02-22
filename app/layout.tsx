@@ -2,6 +2,8 @@
 
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -13,6 +15,8 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const queryClient = new QueryClient();
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -21,11 +25,14 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <div
-          className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gray-100 p-4 md:px-32 md:py-16`}
-        >
-          {children}
-        </div>
+        <QueryClientProvider client={queryClient}>
+          <div
+            className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gray-100 p-4 md:px-32 md:py-16`}
+          >
+            {children}
+          </div>
+          <ReactQueryDevtools initialIsOpen={false} />
+        </QueryClientProvider>
       </body>
     </html>
   );
