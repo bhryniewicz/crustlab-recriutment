@@ -25,7 +25,11 @@ const UserScreen = ({ id }: { id: string }) => {
   const router = useRouter();
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex justify-center items-center h-screen w-full">
+        Loading users
+      </div>
+    );
   }
 
   if (!user) return notFound();
